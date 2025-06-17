@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz & Roleta Premiada</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-container">
+        <div id="quiz-container">
+            <h2>Quiz do Flamengo</h2>
+            <div id="question-area">
+                <h3 id="question">Carregando...</h3>
+                <ul>
+                    <li><input type="radio" name="answer" id="a" class="answer"><label for="a" id="a_text"></label></li>
+                    <li><input type="radio" name="answer" id="b" class="answer"><label for="b" id="b_text"></label></li>
+                    <li><input type="radio" name="answer" id="c" class="answer"><label for="c" id="c_text"></label></li>
+                    <li><input type="radio" name="answer" id="d" class="answer"><label for="d" id="d_text"></label></li>
+                </ul>
+            </div>
+            <button id="submit">Responder</button>
+        </div>
+        <div id="roulette-container" class="hidden">
+            <h1>Boa sorte! Gire a Roleta!</h1>
+            <div class="wheel-wrapper">
+                <div class="arrow"></div>
+                <div id="wheel"></div>
+            </div>
+            <button id="spin-btn">GIRAR</button>
+            <div id="prize-result"></div>
+        </div>
+    </div>
+    <div id="modal-container" class="hidden">
+        <div id="modal">
+            <div id="confetti-container"></div>
+            <h2>Parabéns!</h2>
+            <p>Você ganhou:</p>
+            <p id="prize-name" class="prize-highlight"></p>
+            <a href="#" id="cta-button" class="cta-button" target="_blank" rel="noopener noreferrer">Receber Prêmio</a>
+            <button id="close-modal">Fechar</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

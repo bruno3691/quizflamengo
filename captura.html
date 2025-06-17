@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resgate seu Prêmio!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        :root { --flamengo-red: #C00; --flamengo-black: #222; --white: #fff; }
+        body { font-family: 'Roboto', sans-serif; background-image: url('fundo-estadio.jpg'); background-size: cover; background-position: center center; background-repeat: no-repeat; background-attachment: fixed; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 1rem; }
+        .capture-container { background-color: rgba(255, 255, 255, 0.95); border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); width: 100%; max-width: 500px; text-align: center; padding: 2.5rem; border-top: 5px solid var(--flamengo-red); }
+        h1 { color: var(--flamengo-black); margin-top: 0; margin-bottom: 0.5rem; font-size: 2rem; }
+        p { color: #555; margin-bottom: 2rem; font-size: 1.1rem; }
+        .form-group { margin-bottom: 1.5rem; text-align: left; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #333; }
+        input[type="text"], input[type="email"], input[type="tel"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; box-sizing: border-box; }
+        .submit-btn { background-color: var(--flamengo-red); color: var(--white); border: none; padding: 1rem 2rem; font-size: 1.2rem; font-weight: bold; width: 100%; cursor: pointer; border-radius: 5px; transition: transform .2s; }
+        .submit-btn:hover { transform: scale(1.02); }
+        .hidden { display: none !important; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: var(--white); padding: 2rem; border-radius: 10px; text-align: center; max-width: 90%; width: 500px; }
+        .modal-content h2 { font-size: 1.7rem; color: var(--flamengo-black); margin-top:0; }
+        .modal-content p { font-size: 1rem; }
+        .jersey-options { display: flex; justify-content: space-around; gap: 1rem; margin-top: 1.5rem; }
+        .jersey-choice { border: 3px solid transparent; border-radius: 8px; cursor: pointer; transition: transform .2s, border-color .2s; }
+        .jersey-choice:hover { transform: scale(1.05); border-color: var(--flamengo-red); }
+        .jersey-choice img { max-width: 150px; border-radius: 5px; display: block; }
+        .jersey-choice span { display: block; font-weight: bold; margin-top: 0.5rem; }
+        .payment-button { display: inline-block; padding: 1rem 2rem; background-color: #28a745; color: var(--white); text-decoration: none; font-weight: bold; border-radius: 5px; margin-top: 1.5rem; transition: background-color .2s, transform .2s; }
+        .payment-button:hover { transform: scale(1.05); }
+        /* --- ESTILO PARA O BOTÃO DESATIVADO --- */
+        .payment-button.disabled { background-color: #999; cursor: not-allowed; pointer-events: none; }
+        .payment-button.disabled:hover { transform: none; }
+        /* --- ESTILO PARA O GRUPO DE CONSENTIMENTO --- */
+        .consent-group { margin-top: 1.5rem; text-align: left; display: flex; align-items: center; }
+        .consent-group input[type="checkbox"] { margin-right: 10px; min-width: 18px; height: 18px; }
+        .consent-group label { font-size: 0.9rem; color: #444; margin-bottom: 0; }
+    </style>
+</head>
+<body>
+    <div class="capture-container">
+        <h1>Falta pouco!</h1>
+        <p>Preencha seus dados para garantir o resgate do seu prêmio.</p>
+        <form id="capture-form">
+            <input type="hidden" id="escolha-camisa" name="escolha_camisa" value="">
+            <div class="form-group"><label for="nome">Nome Completo:</label><input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required></div>
+            <div class="form-group"><label for="email">Seu Melhor E-mail:</label><input type="email" id="email" name="email" placeholder="exemplo@email.com" required></div>
+            <div class="form-group"><label for="telefone">Telefone (com DDD):</label><input type="tel" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX" required></div>
+            <button type="submit" class="submit-btn">ESCOLHER MINHA CAMISA!</button>
+        </form>
+    </div>
+
+    <div id="choice-modal-container" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Escolha seu Manto Sagrado!</h2>
+            <div class="jersey-options">
+                <div class="jersey-choice" id="select-principal"><img src="camisa-principal.jpg" alt="Camisa Principal Flamengo"><span>MANTO 1</span></div>
+                <div class="jersey-choice" id="select-branca"><img src="camisa-branca.jpg" alt="Camisa Branca Flamengo"><span>MANTO 2</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="payment-modal-container" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Entenda a Taxa de Processamento</h2>
+            <p>Seu prêmio (Camisa Oficial) é 100% nosso presente para você. A taxa de R$29,90 é um repasse direto dos custos que temos para tirá-la de nosso estoque e colocá-la em suas mãos: embalagem, nota fiscal, manuseio da transportadora e seguro anti-extravio. Transparência total para você receber seu prêmio.</p>
+            
+            <div class="consent-group">
+                <input type="checkbox" id="consent-checkbox">
+                <label for="consent-checkbox">Concordo com a taxa de R$29,90 para garantir o manuseio seguro e o envio com seguro da minha Camisa Oficial.</label>
+            </div>
+            
+            <a href="#" id="payment-cta-button" class="payment-button" target="_blank" rel="noopener noreferrer">COBRIR LOGÍSTICA DE R$29,90</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('capture-form');
+            const choiceModal = document.getElementById('choice-modal-container');
+            const paymentModal = document.getElementById('payment-modal-container');
+            const hiddenChoiceInput = document.getElementById('escolha-camisa');
+            const consentCheckbox = document.getElementById('consent-checkbox');
+            const paymentButton = document.getElementById('payment-cta-button');
+
+            // Botão de pagamento começa desativado por padrão
+            paymentButton.classList.add('disabled');
+            paymentButton.href = "SEU_LINK_DO_GATEWAY_DE_PAGAMENTO_AQUI";
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                choiceModal.classList.remove('hidden');
+            });
+
+            function selectJersey(choice) {
+                hiddenChoiceInput.value = choice;
+                choiceModal.classList.add('hidden');
+                paymentModal.classList.remove('hidden');
+            }
+
+            document.getElementById('select-principal').addEventListener('click', () => selectJersey('principal'));
+            document.getElementById('select-branca').addEventListener('click', () => selectJersey('branca'));
+            
+            // LÓGICA DE ATIVAÇÃO DO BOTÃO DE PAGAMENTO
+            consentCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    paymentButton.classList.remove('disabled'); // Ativa o botão
+                } else {
+                    paymentButton.classList.add('disabled'); // Desativa o botão
+                }
+            });
+        });
+    </script>
+</body>
+</html>
